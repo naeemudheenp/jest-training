@@ -1,0 +1,40 @@
+body {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  background-color: wheat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15%;
+  width: 25%;
+  min-height: 85%;
+  padding: 2%;
+  border-radius: 10px;
+}
+.main__login {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.main__login_input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.main__login_input input {
+  border: none;
+  padding: 5%;
+}
+.main__login_input button {
+  border-radius: 5px;
+  border: none;
+}
+.main__login_input_message {
+  background-color: aqua;
+  color: red;
+  font-size: 14px;
+}/*# sourceMappingURL=main.css.map */

@@ -1,95 +1,110 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import "../css/main.css";
+import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+interface ApiData {
+  id: string;
+  avatar: string;
+  name: string;
+  createdAt: string;
+}
+
+export async function fetchData(): Promise<ApiData> {
+  try {
+    const response = await axios.get(
+      "https://64652a269c09d77a62e5cb10.mockapi.io/users/1"
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Unable To Load Data From Api");
+  }
+}
 
 export default function Home() {
+  var FakeData: ApiData = {
+    id: "32",
+    name: "",
+    avatar: "fd",
+    createdAt: "ff",
+  };
+
+  const [User, SetUser] = useState("");
+  const [Pin, SetPin] = useState("");
+  const [Message, SetMessage] = useState("Welcome");
+  const [Disabled, SetDisabled] = useState(true);
+  const [data, setData] = useState<ApiData>(FakeData);
+
+  useEffect(() => {
+    fetchData()
+      .then((responseData) => setData(responseData))
+      .catch((error) => SetMessage("Unable To Load Data From Api"));
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="main">
+      <div className="main__login">
+        <div className="main__login_input_message">{Message}</div>
+        <div className="main__login_input">
+          <input
+            onChange={(e) => {
+              SetUser(e.target.value);
+              if (User == "" || Pin == "") {
+                SetDisabled(true);
+              } else {
+                SetDisabled(false);
+              }
+            }}
+            placeholder="user"
+          ></input>
+          <input
+            onChange={(e) => {
+              SetPin(e.target.value);
+              if (User == "" || Pin == "") {
+                SetDisabled(true);
+              } else {
+                SetDisabled(false);
+              }
+              if (e.target.value.length < 8) {
+                SetMessage("Length of password should be minimum 8");
+                SetDisabled(true);
+              } else {
+                SetMessage("Password meets requirment");
+                SetDisabled(false);
+              }
+            }}
+            placeholder="pin"
+          ></input>
+          <input
+            className="main__login_input_button"
+            disabled={Disabled}
+            type={"submit"}
+            onClick={() => {
+              login();
+            }}
+            value={"Login"}
+          ></input>
+        </div>
+        <div className="main__users">
+          Suggested UserName (api data):<br></br>
+          <div>{data.name}</div>
         </div>
       </div>
+    </div>
+  );
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+  function login() {
+    if (User == "" && Pin == "") {
+      SetMessage("Please complete the field");
+      return;
+    }
 
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    if (User == "99" && Pin == "99999999") {
+      SetMessage("Password valid");
+    } else {
+      SetMessage("Password Is Invalid");
+    }
+  }
 }
